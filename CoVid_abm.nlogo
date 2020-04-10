@@ -15,8 +15,9 @@ to setup-personas
   create-personas N [set xcor random-poisson random 40 set ycor random-poisson random 40  ]
   create-personas N [set xcor -40 - random-poisson random 40 set ycor -40 - random-poisson  random  40 ]
   create-personas N [set xcor -40 - random-poisson random 40 set ycor random-poisson random 40 ]
+  create-personas N [set xcor  random-poisson random 40 set ycor -40 - random-poisson  random  40 ]
   ask personas[set shape "person" set color green set edad random-poisson 36 set tc precision (36 + random-float 3) 2 set is-sick? false set is-healthy? true set is_symptomatic? false  set ti 0]
-  ask up-to-n-of (0.1 * N) personas [set is-sick? true set is-healthy? false  set ti ti + 1 ifelse random 100 <= 8 [set is_symptomatic? true set color red][set is_symptomatic? true set color red]]
+  ask up-to-n-of (0.1 * N) personas [set is-sick? true set is-healthy? false  set ti ti + 1 ifelse random 100 <= 8 [set is_symptomatic? true set color red][set is_symptomatic? false set color pink]]
 end
 to go
   ask personas [
@@ -30,10 +31,14 @@ to go
 end
 
 to move
-  rt random 180 lt random 180 fd random-gamma 80 80
+  ifelse quarantine [ifelse strategy = 1 [ifelse is-sick? and is_symptomatic? [ ][rt random 180 lt random 180 fd random-gamma 80 80]]
+    [ifelse strategy = 2 [ask n-of (0.3 * ( count personas )) personas [stop]][rt random 180 lt random 180 fd random-gamma 80 80]]]
+    ;[if strategy = 3 []]]
+  [rt random 180 lt random 180 fd random-gamma 80 80]
+;  rt random 180 lt random 180 fd random-gamma 80 80
 end
 to colorear-personas
-  ifelse is-healthy? [set color green][ ifelse is-sick? [set color red][set color black]]
+  ifelse is-healthy? [set color green][ ifelse is-sick? [ifelse is_symptomatic? [set color red][set color pink]][set color black]]
 end
 to colorear-parche
   let k count personas-here set pcolor pcolor + 0.1 * k
@@ -43,13 +48,16 @@ to infect
   let s count personas-on neighbors
   ask up-to-n-of 2.5  personas-on neighbors [if random 100 < 25 [set is-sick? true set is-healthy? false set ti ti + 1]]
 end
+to show_symptoms
+  if ti >= 3 [ifelse random 100 < 20 [set is_symptomatic? true set tc 38 + random-float 1][set is_symptomatic? false] ]
+end
 
 to clear-out
   if ti >= 20 and random 100 <= 80[set is-healthy? false set is-sick? false set ti 0]
 end
 
 to muere
-  if ti > 15 and random 100 <= 3 [die]
+  if ti > 15 and random 100 <= 1 [die]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -119,7 +127,7 @@ INPUTBOX
 196
 201
 N
-1000.0
+2000.0
 1
 0
 Number
@@ -129,7 +137,7 @@ PLOT
 354
 1819
 737
-plot 1
+Epidemic dynamics
 días
 personas
 0.0
@@ -140,16 +148,16 @@ true
 true
 "" ""
 PENS
-"recuperados" 1.0 0 -16777216 true "" "plot count personas with [color = black]"
+"recuperados" 1.0 0 -14070903 true "" "plot count personas with [color = black]"
 "susceptibles" 1.0 0 -11085214 true "" "plot count personas with [color = green]"
-"infectados" 1.0 0 -2674135 true "" "plot count personas with [color = red]"
+"infectados" 1.0 0 -2674135 true "" "plot (count personas with [color = red] + count personas with [color = pink])"
 
 PLOT
 1176
 38
 1805
 337
-plot 2
+Total population
 NIL
 NIL
 0.0
@@ -160,44 +168,56 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles"
+"default" 1.0 0 -16777216 true "" "plot  count turtles"
+
+SWITCH
+49
+332
+185
+365
+quarantine
+quarantine
+0
+1
+-1000
+
+CHOOSER
+34
+403
+172
+448
+strategy
+strategy
+1 2 3
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+CoVid19-abm is an agent based model for epidemic dynamics of covid19 desease in urban centers or megalopolis it aims to simulate transmission and desease dynamics  and also medicare dynamics.
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
-
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 default
 true
