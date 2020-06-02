@@ -1,4 +1,4 @@
-extensions[shell py csv nw]
+extensions[shell py csv nw array]
 
 globals[
   dd ;mean desease duration
@@ -23,6 +23,7 @@ turtles-own[
   is_symptomatic?
   symptoms-type; 0-> mild , 1-> moderate, 2-> severe,3->critical
   hosp? ;hospitalized
+  responsivity ;how much the individual is responsive to security measures
 ]
 
 breed[personas persona ]
@@ -52,7 +53,8 @@ to setup-patches
 end
 
 to setup-personas
-  foreach range M [create-personas N [set xcor ((random M - (M - 1)) * 40 ) - random-poisson  random 20 set ycor ((random M - (M - 1)) * 40 ) - random-poisson  random 20]]
+  foreach range M
+  [create-personas N [set xcor ((random M - (M - 1)) * 40 ) - random-poisson  random 20 set ycor ((random M - (M - 1)) * 40 ) - random-poisson  random 20]]
   ask personas[
     set shape "person"
     set color green
@@ -67,6 +69,9 @@ to setup-personas
     set OB random 2
     set DB random 2
     set hosp? false
+    set responsivity random-float 1
+    create-links-with personas-on neighbors
+    nw:set-context personas links
   ]
   ask up-to-n-of (0.1 * N) personas
   [
@@ -109,6 +114,7 @@ to go
   set T T + 1
   set D PT - count personas
   set PT count personas
+
   tick
 end
 
@@ -118,8 +124,8 @@ to move
   ifelse hosp? [fd 0]
   [
   ifelse sr? [
-    ifelse strategy = 1 [ifelse is-sick? and is_symptomatic? [ ][rt random 180 lt random 180 fd random-gamma 80 80]]
-    [ifelse strategy = 2 [ask n-of (0.3 * ( count personas )) personas [ fd 0]][if strategy = 3 [ask n-of (0.8 * (count personas)) personas [fd 0] ]]]
+    ifelse strategy = 1 [ifelse is-sick? and is_symptomatic? and responsivity >= information-effectiveness [ ][rt random 180 lt random 180 fd random-gamma 80 80]]
+      [ifelse strategy = 2 [ask n-of (0.3 * ( count personas )) personas [if responsivity >= information-effectiveness [ fd 0]]][if strategy = 3 [ask n-of (0.8 * (count personas)) personas [if responsivity >= information-effectiveness [fd 0]] ]]]
   ]
   [rt random 180 lt random 180 fd random-gamma 80 80]
   ]
@@ -156,6 +162,7 @@ to end-quarantine
   if quarantine and (count personas with [color = black] > (count personas with [color = red] + count personas with [color = pink]) )[set sr? false]
 end
 
+
 to clear-out
   if ti >= dd and random 100 <= 40[set is-healthy? false set is-sick? false set ti 0 set hosp? false]
 end
@@ -168,7 +175,8 @@ end
 ;;;;;;;;;;;;;PATCHES;;;;;;;;;;;;;;;;;;;;
 
 to colorear-parche
-  let k count personas-here set pcolor pcolor + 0.1 * k
+  ifelse epi-risk[ifelse any? personas-here with [is-sick? = true and is_symptomatic? = true][let g count personas-here with[is-sick? = true and is_symptomatic? = true] set pcolor 116 - g][let k count personas-here set pcolor pcolor + 0.1 * k]]
+  [let k count personas-here set pcolor pcolor + 0.1 * k]
 end
 
 
@@ -194,7 +202,26 @@ to-report hospitalized
   report ((count personas with [hosp? = true])/(sintomaticos / 100 )) * 100
 end
 
+to-report mild-cases
+  report (count personas with [symptoms-type = 0])
+end
+to-report moderate-cases
+  report (count personas with [symptoms-type = 1])
+end
 
+to-report severe-cases
+  report (count personas with [symptoms-type = 2])
+end
+
+to-report critical-cases
+  report (count personas with [symptoms-type = 3])
+end
+
+;to-report spatial-hazard
+
+ ; report ask patches[count personas-here with [is-sick? = true ]]
+
+;end
 ;to-report mortalidad
 ;report ()
 ;end
@@ -358,10 +385,10 @@ dd
 11
 
 SLIDER
-28
-266
-200
-299
+18
+285
+190
+318
 qt
 qt
 0
@@ -493,7 +520,7 @@ SWITCH
 806
 Med
 Med
-1
+0
 1
 -1000
 
@@ -504,7 +531,7 @@ SWITCH
 807
 Vaccine
 Vaccine
-1
+0
 1
 -1000
 
@@ -525,6 +552,32 @@ false
 "" ""
 PENS
 "default" 1.0 0 -14070903 true "" "plot D"
+
+SLIDER
+2
+249
+205
+282
+information-effectiveness
+information-effectiveness
+0
+1
+0.3
+0.1
+1
+NIL
+HORIZONTAL
+
+SWITCH
+44
+814
+153
+847
+epi-risk
+epi-risk
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -906,41 +959,12 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="NoQuarantine" repetitions="100" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <timeLimit steps="730"/>
-    <metric>count personas</metric>
-    <metric>infectados * 100</metric>
-    <metric>suceptibles * 100</metric>
-    <metric>recuperados * 100</metric>
-    <metric>sintomaticos * 100</metric>
-    <metric>asintomaticos * 100</metric>
-    <metric>hospitalized * 100</metric>
-    <metric>D</metric>
-    <steppedValueSet variable="qt" first="15" step="5" last="50"/>
-    <enumeratedValueSet variable="N">
-      <value value="2000"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="mb">
-      <value value="50"/>
-      <value value="70"/>
-      <value value="90"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="strategy">
-      <value value="1"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="quarantine">
-      <value value="false"/>
-    </enumeratedValueSet>
-    <enumeratedValueSet variable="M">
-      <value value="4"/>
-    </enumeratedValueSet>
-  </experiment>
   <experiment name="Quarantine1" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go</go>
-    <timeLimit steps="730"/>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
@@ -970,8 +994,10 @@ NetLogo 6.1.1
   </experiment>
   <experiment name="Quarantine2" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go</go>
-    <timeLimit steps="730"/>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
@@ -1001,8 +1027,10 @@ NetLogo 6.1.1
   </experiment>
   <experiment name="Quarantine3" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go</go>
-    <timeLimit steps="730"/>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
@@ -1025,6 +1053,77 @@ NetLogo 6.1.1
     </enumeratedValueSet>
     <enumeratedValueSet variable="quarantine">
       <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="M">
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="NoQuarantine" repetitions="100" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
+    <metric>count personas</metric>
+    <metric>infectados * 100</metric>
+    <metric>suceptibles * 100</metric>
+    <metric>recuperados * 100</metric>
+    <metric>sintomaticos * 100</metric>
+    <metric>asintomaticos * 100</metric>
+    <metric>hospitalized * 100</metric>
+    <metric>D</metric>
+    <steppedValueSet variable="qt" first="15" step="5" last="50"/>
+    <enumeratedValueSet variable="N">
+      <value value="2000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mb">
+      <value value="50"/>
+      <value value="70"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="strategy">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="M">
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="prueba" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go
+export-view word"prueba"word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word"prueba"word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="50"/>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="qt">
+      <value value="34"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="N">
+      <value value="500"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="strategy">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="epi-risk">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Med">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="Vaccine">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mb">
+      <value value="50"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="M">
       <value value="4"/>
