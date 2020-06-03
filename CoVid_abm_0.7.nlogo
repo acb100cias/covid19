@@ -136,8 +136,11 @@ to colorear-personas
 end
 
 to infect
+
   let s count personas-on neighbors
   ask up-to-n-of 2.5  personas-on neighbors [if random 100 < 25 [set is-sick? true set is-healthy? false set ti ti + 1 ]]
+  create-links-with personas-on neighbors
+  nw:set-context personas links
 end
 
 to show_symptoms
@@ -961,9 +964,7 @@ NetLogo 6.1.1
 <experiments>
   <experiment name="Quarantine1" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go
-export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
-nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <go>go</go>
     <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
@@ -994,9 +995,7 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
   </experiment>
   <experiment name="Quarantine2" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go
-export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
-nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <go>go</go>
     <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
@@ -1027,9 +1026,7 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
   </experiment>
   <experiment name="Quarantine3" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go
-export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
-nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <go>go</go>
     <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
@@ -1060,9 +1057,7 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
   </experiment>
   <experiment name="NoQuarantine" repetitions="100" runMetricsEveryStep="true">
     <setup>setup</setup>
-    <go>go
-export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
-nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <go>go</go>
     <timeLimit steps="365"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
@@ -1124,6 +1119,138 @@ nw:save-gml word"prueba"word(behaviorspace-experiment-name)word"step"word(T)word
     </enumeratedValueSet>
     <enumeratedValueSet variable="mb">
       <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="M">
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="Quarantine1_NW" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
+    <metric>count personas</metric>
+    <metric>infectados * 100</metric>
+    <metric>suceptibles * 100</metric>
+    <metric>recuperados * 100</metric>
+    <metric>sintomaticos * 100</metric>
+    <metric>asintomaticos * 100</metric>
+    <metric>hospitalized * 100</metric>
+    <metric>D</metric>
+    <steppedValueSet variable="qt" first="15" step="5" last="50"/>
+    <enumeratedValueSet variable="N">
+      <value value="2000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mb">
+      <value value="50"/>
+      <value value="70"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="strategy">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="M">
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="Quarantine2_NW" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
+    <metric>count personas</metric>
+    <metric>infectados * 100</metric>
+    <metric>suceptibles * 100</metric>
+    <metric>recuperados * 100</metric>
+    <metric>sintomaticos * 100</metric>
+    <metric>asintomaticos * 100</metric>
+    <metric>hospitalized * 100</metric>
+    <metric>D</metric>
+    <steppedValueSet variable="qt" first="15" step="5" last="50"/>
+    <enumeratedValueSet variable="N">
+      <value value="2000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mb">
+      <value value="50"/>
+      <value value="70"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="strategy">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="M">
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="Quarantine3_NW" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
+    <metric>count personas</metric>
+    <metric>infectados * 100</metric>
+    <metric>suceptibles * 100</metric>
+    <metric>recuperados * 100</metric>
+    <metric>sintomaticos * 100</metric>
+    <metric>asintomaticos * 100</metric>
+    <metric>hospitalized * 100</metric>
+    <metric>D</metric>
+    <steppedValueSet variable="qt" first="15" step="5" last="50"/>
+    <enumeratedValueSet variable="N">
+      <value value="2000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mb">
+      <value value="50"/>
+      <value value="70"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="strategy">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="M">
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="NoQuarantine_NW" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go
+export-view word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".png"
+nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(behaviorspace-run-number)".gml"</go>
+    <timeLimit steps="365"/>
+    <metric>count personas</metric>
+    <metric>infectados * 100</metric>
+    <metric>suceptibles * 100</metric>
+    <metric>recuperados * 100</metric>
+    <metric>sintomaticos * 100</metric>
+    <metric>asintomaticos * 100</metric>
+    <metric>hospitalized * 100</metric>
+    <metric>D</metric>
+    <steppedValueSet variable="qt" first="15" step="5" last="50"/>
+    <enumeratedValueSet variable="N">
+      <value value="2000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="mb">
+      <value value="50"/>
+      <value value="70"/>
+      <value value="90"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="strategy">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="quarantine">
+      <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="M">
       <value value="4"/>
