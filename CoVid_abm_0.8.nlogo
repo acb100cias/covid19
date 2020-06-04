@@ -351,7 +351,7 @@ SWITCH
 365
 quarantine
 quarantine
-0
+1
 1
 -1000
 
@@ -363,7 +363,7 @@ CHOOSER
 strategy
 strategy
 1 2 3
-1
+0
 
 MONITOR
 27
@@ -962,7 +962,7 @@ NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 <experiments>
-  <experiment name="Quarantine1" repetitions="100" runMetricsEveryStep="true">
+  <experiment name="Quarantine1" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="365"/>
@@ -992,8 +992,13 @@ NetLogo 6.1.1
     <enumeratedValueSet variable="M">
       <value value="4"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
   </experiment>
-  <experiment name="Quarantine2" repetitions="100" runMetricsEveryStep="true">
+  <experiment name="Quarantine2" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="365"/>
@@ -1023,8 +1028,13 @@ NetLogo 6.1.1
     <enumeratedValueSet variable="M">
       <value value="4"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
   </experiment>
-  <experiment name="Quarantine3" repetitions="100" runMetricsEveryStep="true">
+  <experiment name="Quarantine3" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="365"/>
@@ -1054,8 +1064,13 @@ NetLogo 6.1.1
     <enumeratedValueSet variable="M">
       <value value="4"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
   </experiment>
-  <experiment name="NoQuarantine" repetitions="100" runMetricsEveryStep="true">
+  <experiment name="NoQuarantine" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="365"/>
@@ -1084,6 +1099,11 @@ NetLogo 6.1.1
     </enumeratedValueSet>
     <enumeratedValueSet variable="M">
       <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="prueba" repetitions="1" runMetricsEveryStep="true">
@@ -1156,6 +1176,11 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
     <enumeratedValueSet variable="M">
       <value value="4"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="Quarantine2_NW" repetitions="1" runMetricsEveryStep="true">
     <setup>setup</setup>
@@ -1188,6 +1213,11 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
     </enumeratedValueSet>
     <enumeratedValueSet variable="M">
       <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
     </enumeratedValueSet>
   </experiment>
   <experiment name="Quarantine3_NW" repetitions="1" runMetricsEveryStep="true">
@@ -1222,6 +1252,11 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
     <enumeratedValueSet variable="M">
       <value value="4"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
+    </enumeratedValueSet>
   </experiment>
   <experiment name="NoQuarantine_NW" repetitions="1" runMetricsEveryStep="true">
     <setup>setup</setup>
@@ -1254,6 +1289,11 @@ nw:save-gml word(behaviorspace-experiment-name)word"step"word(T)word"run"word(be
     </enumeratedValueSet>
     <enumeratedValueSet variable="M">
       <value value="4"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="information-effectiveness">
+      <value value="0.3"/>
+      <value value="0.5"/>
+      <value value="0.8"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
