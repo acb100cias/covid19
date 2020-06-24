@@ -965,7 +965,7 @@ NetLogo 6.1.1
   <experiment name="Quarantine1" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="365"/>
+    <timeLimit steps="100"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
@@ -1001,7 +1001,7 @@ NetLogo 6.1.1
   <experiment name="Quarantine2" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="365"/>
+    <timeLimit steps="100"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
@@ -1037,7 +1037,7 @@ NetLogo 6.1.1
   <experiment name="Quarantine3" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="365"/>
+    <timeLimit steps="100"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
@@ -1073,7 +1073,7 @@ NetLogo 6.1.1
   <experiment name="NoQuarantine" repetitions="50" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="365"/>
+    <timeLimit steps="100"/>
     <metric>count personas</metric>
     <metric>infectados * 100</metric>
     <metric>suceptibles * 100</metric>
